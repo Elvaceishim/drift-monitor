@@ -13,6 +13,7 @@ Built as part of a deliberate MLOps skill-building track targeting production AI
 - Runs statistical drift detection comparing live traffic distributions against a baseline
 - Flags drift per feature with p-values and KS statistics
 - Fully containerized with Docker for portable deployment
+- CI/CD pipeline via GitHub Actions — automatically tests and gates the model on every push
 
 ---
 
@@ -31,6 +32,7 @@ Most ML portfolios stop at model training. This project covers the part that act
 | Drift Detection  | Kolmogorov-Smirnov Test (`scipy.stats`)                        |
 | Containerization | Docker                                                         |
 | Logging          | JSONL flat-file request logger                                 |
+| CI/CD            | GitHub Actions                                                 |
 | Runtime          | Python 3.12                                                    |
 
 ---
@@ -138,6 +140,28 @@ curl http://127.0.0.1:8000/drift
 
 ---
 
+## CI/CD Pipeline
+
+The project includes a GitHub Actions workflow that runs automatically on every push to `main`.
+
+**Pipeline steps:**
+
+| Step | Action |
+| ---- | ------ |
+| 1 | Check out code |
+| 2 | Set up Python 3.12 |
+| 3 | Cache pip dependencies |
+| 4 | Install dependencies (torch CPU build) |
+| 5 | Run API + drift detection tests via pytest — 6 tests must pass |
+| 6 | Run model evaluation — accuracy must exceed **85% threshold** |
+| 7 | Upload evaluation results as artifact |
+
+The model only proceeds to deployment if it clears both the test suite and the evaluation gate. If either step fails, the pipeline halts and nothing deploys.
+
+> Tested locally using [Act](https://nektosact.com) — a tool that runs GitHub Actions workflows locally via Docker.
+
+---
+
 ## Project structure
 
 ```
@@ -147,10 +171,18 @@ drift-monitor/
 │   ├── model.py       # DistilBERT model loading and inference
 │   ├── drift.py       # KS-test drift detection logic
 │   └── logger.py      # JSONL request logger
+├── .github/
+│   └── workflows/
+│       └── ml-pipeline.yml  # GitHub Actions CI/CD workflow
+├── tests/
+│   ├── test_api.py          # API endpoint tests
+│   └── test_drift.py        # Drift detection tests
+├── scripts/
+│   └── evaluate.py          # Model evaluation + threshold gate
 ├── data/
-│   └── baseline.json  # Baseline feature distributions
+│   └── baseline.json        # Baseline feature distributions
 ├── logs/
-│   └── requests.jsonl # Auto-generated at runtime
+│   └── requests.jsonl       # Auto-generated at runtime
 ├── Dockerfile
 └── requirements.txt
 ```
