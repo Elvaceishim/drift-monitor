@@ -24,14 +24,14 @@ Most ML portfolios stop at model training. This project covers the part that act
 
 ## Stack
 
-| Layer            | Technology                                                   |
-| ---------------- | ------------------------------------------------------------ |
-| API Framework    | FastAPI                                                      |
+| Layer            | Technology                                                     |
+| ---------------- | -------------------------------------------------------------- |
+| API Framework    | FastAPI                                                        |
 | Model            | DistilBERT (`distilbert-base-uncased-finetuned-sst-2-english`) |
-| Drift Detection  | Kolmogorov-Smirnov Test (`scipy.stats`)                      |
-| Containerization | Docker                                                       |
-| Logging          | JSONL flat-file request logger                               |
-| Runtime          | Python 3.12                                                  |
+| Drift Detection  | Kolmogorov-Smirnov Test (`scipy.stats`)                        |
+| Containerization | Docker                                                         |
+| Logging          | JSONL flat-file request logger                                 |
+| Runtime          | Python 3.12                                                    |
 
 ---
 
@@ -161,4 +161,4 @@ drift-monitor/
 
 **Elvis Anselm** — AI Engineer & Content Strategist, Lagos Nigeria
 
-[Portfolio](https://gleeful-starburst-ddb1d6.netlify.app) · [LinkedIn](https://www.linkedin.com/in/elvisanselm/) · [GitHub](https://github.com/Elvaceishim) · [Repository](https://github.com/Elvaceishim/drift-monitor)
+[Portfolio](https://elvace.netlify.app) · [LinkedIn](https://www.linkedin.com/in/elvisanselm/) · [GitHub](https://github.com/Elvaceishim) · [Repository](https://github.com/Elvaceishim/drift-monitor)
