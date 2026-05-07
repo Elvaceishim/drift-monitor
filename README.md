@@ -1,29 +1,27 @@
-# Drift Monitor — ML Model Serving API with Input Drift Detection
+# ML Production Stack
 
-A production-grade REST API that serves sentiment predictions from a fine-tuned DistilBERT model and monitors incoming requests for statistical input drift using the Kolmogorov-Smirnov test.
+A two-part MLOps project covering model serving with observability and automated CI/CD with quality gating. Built as part of a deliberate MLOps skill-building track targeting production AI engineering roles.
 
-Built as part of a deliberate MLOps skill-building track targeting production AI engineering roles.
+**Part 1** — Production REST API serving DistilBERT sentiment predictions with statistical input drift detection.  
+**Part 2** — GitHub Actions CI/CD pipeline that automatically tests and gates the model on every push.
 
 ---
 
-## What it does
+## Part 1 — Model Serving API with Drift Monitoring
 
-- Serves real-time sentiment predictions via a REST API
+### What it does
+
+- Serves real-time sentiment predictions via REST API
 - Logs every incoming request with extracted features (text length, word count, confidence score)
-- Runs statistical drift detection comparing live traffic distributions against a baseline
+- Runs statistical drift detection comparing live traffic against a baseline distribution
 - Flags drift per feature with p-values and KS statistics
-- Fully containerized with Docker for portable deployment
-- CI/CD pipeline via GitHub Actions — automatically tests and gates the model on every push
+- Fully containerized with Docker
 
----
+### Why it matters
 
-## Why it matters
+Most ML portfolios stop at model training. This covers what actually breaks in production — input drift is one of the leading causes of silent model degradation. This API detects it automatically, giving teams an early signal before prediction quality degrades.
 
-Most ML portfolios stop at model training. This project covers the part that actually breaks in production — **what happens after the model is deployed**. Input drift is one of the leading causes of silent model degradation in production systems. This API detects it automatically, giving teams an early signal before prediction quality degrades.
-
----
-
-## Stack
+### Stack
 
 | Layer            | Technology                                                     |
 | ---------------- | -------------------------------------------------------------- |
@@ -32,12 +30,9 @@ Most ML portfolios stop at model training. This project covers the part that act
 | Drift Detection  | Kolmogorov-Smirnov Test (`scipy.stats`)                        |
 | Containerization | Docker                                                         |
 | Logging          | JSONL flat-file request logger                                 |
-| CI/CD            | GitHub Actions                                                 |
 | Runtime          | Python 3.12                                                    |
 
----
-
-## Endpoints
+### Endpoints
 
 | Method | Endpoint   | Description                                    |
 | ------ | ---------- | ---------------------------------------------- |
@@ -46,11 +41,9 @@ Most ML portfolios stop at model training. This project covers the part that act
 | POST   | `/predict` | Run sentiment prediction on input text         |
 | GET    | `/drift`   | Run drift report against baseline distribution |
 
----
+### Running locally
 
-## Running locally
-
-**Requirements:** Python 3.12+, pip
+**Without Docker:**
 
 ```bash
 python -m venv venv
@@ -64,15 +57,11 @@ Visit `http://127.0.0.1:8000/docs` for the interactive Swagger UI.
 **With Docker:**
 
 ```bash
-docker build -t drift-monitor .
-docker run -p 8000:8000 drift-monitor
+docker build -t ml-production-stack .
+docker run -p 8000:8000 ml-production-stack
 ```
 
-Visit `http://127.0.0.1:8000/docs`
-
----
-
-## How drift detection works
+### How drift detection works
 
 On startup, the API loads a baseline distribution from `data/baseline.json` — a snapshot of expected input characteristics (text length, word count, confidence score) derived from representative training traffic.
 
@@ -80,9 +69,7 @@ Every request is logged to `logs/requests.jsonl`. When `/drift` is called, the A
 
 At least 10 logged requests are required before drift detection runs.
 
----
-
-## Example: Predict
+### Example: Predict
 
 **Request:**
 
@@ -102,9 +89,7 @@ curl -X POST http://127.0.0.1:8000/predict \
 }
 ```
 
----
-
-## Example: Drift Report
+### Example: Drift Report
 
 **Request:**
 
@@ -140,49 +125,75 @@ curl http://127.0.0.1:8000/drift
 
 ---
 
-## CI/CD Pipeline
+## Part 2 — CI/CD Pipeline with Model Evaluation Gate
 
-The project includes a GitHub Actions workflow that runs automatically on every push to `main`.
+### What it does
 
-**Pipeline steps:**
+- Triggers automatically on every push to `main`
+- Runs a 6-test API test suite via pytest
+- Evaluates the model against 20 labelled samples
+- Blocks deployment if accuracy falls below 85%
+- Uploads evaluation results as a downloadable artifact
+- Tested locally using [Act](https://nektosact.com)
 
-| Step | Action |
-| ---- | ------ |
-| 1 | Check out code |
-| 2 | Set up Python 3.12 |
-| 3 | Cache pip dependencies |
-| 4 | Install dependencies (torch CPU build) |
-| 5 | Run API + drift detection tests via pytest — 6 tests must pass |
-| 6 | Run model evaluation — accuracy must exceed **85% threshold** |
-| 7 | Upload evaluation results as artifact |
+### Why it matters
 
-The model only proceeds to deployment if it clears both the test suite and the evaluation gate. If either step fails, the pipeline halts and nothing deploys.
+Most engineers push code and manually check if things work. This pipeline means the code checks itself — the model only proceeds to deployment if it clears both the test suite and the evaluation gate. That's the difference between a developer and an engineer who thinks about production systems.
 
-> Tested locally using [Act](https://nektosact.com) — a tool that runs GitHub Actions workflows locally via Docker.
+### Pipeline steps
+
+```
+Push to main
+↓
+GitHub spins up Ubuntu VM
+↓
+Step 1: Check out code
+↓
+Step 2: Set up Python 3.12
+↓
+Step 3: Cache pip dependencies
+↓
+Step 4: Install dependencies
+↓
+Step 5: Run API tests (pytest)  ← pipeline stops here if any test fails
+↓
+Step 6: Run model evaluation    ← pipeline stops here if accuracy < 85%
+↓
+Step 7: Upload eval results as artifact
+```
+
+### Evaluation results (local Act run)
+
+```
+Correct:   20/20
+Accuracy:  100.00%
+Threshold: 85.00%
+✅ PASSED — Model meets the quality threshold. Safe to deploy.
+```
 
 ---
 
 ## Project structure
 
 ```
-drift-monitor/
-├── app/
-│   ├── main.py        # FastAPI app and route definitions
-│   ├── model.py       # DistilBERT model loading and inference
-│   ├── drift.py       # KS-test drift detection logic
-│   └── logger.py      # JSONL request logger
+ml-production-stack/
 ├── .github/
 │   └── workflows/
-│       └── ml-pipeline.yml  # GitHub Actions CI/CD workflow
-├── tests/
-│   ├── test_api.py          # API endpoint tests
-│   └── test_drift.py        # Drift detection tests
-├── scripts/
-│   └── evaluate.py          # Model evaluation + threshold gate
+│       └── ml-pipeline.yml    # CI/CD workflow
+├── app/
+│   ├── main.py                # FastAPI app and routes
+│   ├── model.py               # Model loading and inference
+│   ├── drift.py               # KS-test drift detection
+│   └── logger.py              # JSONL request logger
 ├── data/
-│   └── baseline.json        # Baseline feature distributions
+│   └── baseline.json          # Baseline feature distributions
 ├── logs/
-│   └── requests.jsonl       # Auto-generated at runtime
+│   └── requests.jsonl         # Auto-generated at runtime
+├── scripts/
+│   └── evaluate.py            # Model evaluation + threshold gate
+├── tests/
+│   └── test_api.py            # API endpoint tests
+├── conftest.py                # Pytest path configuration
 ├── Dockerfile
 └── requirements.txt
 ```
