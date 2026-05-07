@@ -1,0 +1,149 @@
+{
+  "accuracy": 1.0,
+  "correct": 20,
+  "total": 20,
+  "threshold": 0.85,
+  "passed": true,
+  "results": [
+    {
+      "text": "This product is absolutely amazing!",
+      "expected": "POSITIVE",
+      "predicted": "POSITIVE",
+      "score": 0.9999,
+      "passed": true
+    },
+    {
+      "text": "Best purchase I have ever made.",
+      "expected": "POSITIVE",
+      "predicted": "POSITIVE",
+      "score": 0.9998,
+      "passed": true
+    },
+    {
+      "text": "Highly recommend to everyone.",
+      "expected": "POSITIVE",
+      "predicted": "POSITIVE",
+      "score": 0.9999,
+      "passed": true
+    },
+    {
+      "text": "Exceeded all my expectations.",
+      "expected": "POSITIVE",
+      "predicted": "POSITIVE",
+      "score": 0.9994,
+      "passed": true
+    },
+    {
+      "text": "Fantastic quality, very happy.",
+      "expected": "POSITIVE",
+      "predicted": "POSITIVE",
+      "score": 0.9999,
+      "passed": true
+    },
+    {
+      "text": "Terrible product, complete waste of money.",
+      "expected": "NEGATIVE",
+      "predicted": "NEGATIVE",
+      "score": 0.9998,
+      "passed": true
+    },
+    {
+      "text": "Worst experience I have ever had.",
+      "expected": "NEGATIVE",
+      "predicted": "NEGATIVE",
+      "score": 0.9998,
+      "passed": true
+    },
+    {
+      "text": "Deeply disappointed, do not buy.",
+      "expected": "NEGATIVE",
+      "predicted": "NEGATIVE",
+      "score": 0.9997,
+      "passed": true
+    },
+    {
+      "text": "Broke after one day, awful quality.",
+      "expected": "NEGATIVE",
+      "predicted": "NEGATIVE",
+      "score": 0.9985,
+      "passed": true
+    },
+    {
+      "text": "Total scam, avoid at all costs.",
+      "expected": "NEGATIVE",
+      "predicted": "NEGATIVE",
+      "score": 0.9991,
+      "passed": true
+    },
+    {
+      "text": "Good value for the price.",
+      "expected": "POSITIVE",
+      "predicted": "POSITIVE",
+      "score": 0.9999,
+      "passed": true
+    },
+    {
+      "text": "Not worth the money at all.",
+      "expected": "NEGATIVE",
+      "predicted": "NEGATIVE",
+      "score": 0.9998,
+      "passed": true
+    },
+    {
+      "text": "Really impressed with the results.",
+      "expected": "POSITIVE",
+      "predicted": "POSITIVE",
+      "score": 0.9999,
+      "passed": true
+    },
+    {
+      "text": "Complete disaster from start to finish.",
+      "expected": "NEGATIVE",
+      "predicted": "NEGATIVE",
+      "score": 0.9998,
+      "passed": true
+    },
+    {
+      "text": "Works exactly as described.",
+      "expected": "POSITIVE",
+      "predicted": "POSITIVE",
+      "score": 0.9997,
+      "passed": true
+    },
+    {
+      "text": "Very poor customer service.",
+      "expected": "NEGATIVE",
+      "predicted": "NEGATIVE",
+      "score": 0.9998,
+      "passed": true
+    },
+    {
+      "text": "Outstanding performance, love it.",
+      "expected": "POSITIVE",
+      "predicted": "POSITIVE",
+      "score": 0.9999,
+      "passed": true
+    },
+    {
+      "text": "Arrived broken and unusable.",
+      "expected": "NEGATIVE",
+      "predicted": "NEGATIVE",
+      "score": 0.9997,
+      "passed": true
+    },
+    {
+      "text": "Solid product, does the job well.",
+      "expected": "POSITIVE",
+      "predicted": "POSITIVE",
+      "score": 0.9999,
+      "passed": true
+    },
+    {
+      "text": "Regret this purchase entirely.",
+      "expected": "NEGATIVE",
+      "predicted": "NEGATIVE",
+      "score": 0.9995,
+      "passed": true
+    }
+  ]
+}

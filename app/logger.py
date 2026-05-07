@@ -1,13 +1,13 @@
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 
 LOG_PATH = "logs/requests.jsonl"
 
 def log_request(text: str, prediction: dict):
     os.makedirs("logs", exist_ok=True)
     entry = {
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "text": text,
         "label": prediction["label"],
         "score": prediction["score"],
